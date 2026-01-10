@@ -1,0 +1,61 @@
+# Interview Sprint Platform .gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Solutions (keep private during practice)
+solutions/*
+!solutions/.gitkeep
+
+# Logs (personal progress)
+logs/sessions/*
+logs/postmortems/*
+logs/metrics.json
+!logs/.gitkeep
+!logs/sessions/.gitkeep
+!logs/postmortems/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Audio files
+*.wav
+*.mp3
+

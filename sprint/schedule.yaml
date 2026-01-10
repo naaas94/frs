@@ -1,0 +1,146 @@
+# 14-Day Interview Sprint Schedule
+# Based on the job-fast optimized execution plan
+
+sprint:
+  name: "MLE Interview Sprint"
+  duration_days: 14
+  daily_time_minutes: 90
+  structure:
+    weekday:
+      - name: "Timed Live Coding"
+        duration: 45
+        constraints: ["no notes", "talk aloud", "tests first"]
+      - name: "Plumbing Rep"
+        duration: 45
+        focus: "data pipeline patterns"
+    weekend:
+      - name: "2 Timed Problems"
+        duration: 70
+      - name: "1 Plumbing Rep"
+        duration: 20
+
+  stop_condition: "Medium solved in 30-35 min with correct code + tests"
+
+week1:
+  theme: "Automate the Templates"
+  
+  day1:
+    date_offset: 0
+    focus: "Hashmap Grouping + Top-K"
+    pattern: "hashmap"
+    timed_problem: "hashmap/problem_01_two_sum"
+    plumbing_rep: "jsonl_aggregation"
+    notebook_review: "notebooks/tier_a/01_hashmap_grouping.ipynb"
+    
+  day2:
+    date_offset: 1
+    focus: "Sorting by Key + Tie-breakers"
+    pattern: "sorting"
+    timed_problem: "sorting/problem_01_merge_intervals"
+    plumbing_rep: "csv_validation"
+    notebook_review: "notebooks/tier_a/03_sorting_keys.ipynb"
+    
+  day3:
+    date_offset: 2
+    focus: "Binary Search Boundaries"
+    pattern: "binary_search"
+    timed_problem: "binary_search/problem_01_search_rotated"
+    plumbing_rep: "jsonl_aggregation"
+    notebook_review: "notebooks/tier_a/05_binary_search.ipynb"
+    
+  day4:
+    date_offset: 3
+    focus: "BFS/DFS Visited Template"
+    pattern: "graph"
+    timed_problem: "graph/problem_01_num_islands"
+    plumbing_rep: "api_merger"
+    notebook_review: "notebooks/tier_a/06_bfs_dfs.ipynb"
+    
+  day5:
+    date_offset: 4
+    focus: "Mixed Problem (Two Patterns)"
+    pattern: "mixed"
+    timed_problem: "two_pointers/problem_01_container_water"
+    plumbing_rep: "csv_validation"
+    notebook_review: "notebooks/tier_a/02_two_pointers.ipynb"
+    
+  weekend1:
+    date_offset: 5
+    type: "rest"
+    
+  weekend2:
+    date_offset: 6
+    focus: "Weekend Practice"
+    problems:
+      - "heap/problem_01_kth_largest"
+      - "hashmap/problem_02_group_anagrams"
+    plumbing_rep: "jsonl_aggregation"
+
+week2:
+  theme: "Integrate + Mock"
+  
+  day6:
+    date_offset: 7
+    focus: "Mixed Problems - Algo Heavy"
+    problems:
+      - "sorting/problem_02_meeting_rooms"
+      - "binary_search/problem_02_find_peak"
+    
+  day7:
+    date_offset: 8
+    focus: "Mixed Problems - Plumbing Heavy"
+    problems:
+      - "graph/problem_02_clone_graph"
+    plumbing_rep: "full_pipeline_exercise"
+    
+  day8:
+    date_offset: 9
+    focus: "Full Mock #1"
+    type: "mock"
+    duration_minutes: 45
+    problem_type: "random_medium"
+    review: true
+    
+  day9:
+    date_offset: 10
+    focus: "Patch Weakest Pattern"
+    type: "remediation"
+    instruction: "Review postmortems, identify weakest pattern, drill 2 problems"
+    
+  day10:
+    date_offset: 11
+    focus: "Patch Weakest Pattern (cont)"
+    type: "remediation"
+    instruction: "Continue drilling weak pattern until automatic"
+    
+  day11:
+    date_offset: 12
+    focus: "Full Mock #2"
+    type: "mock"
+    duration_minutes: 45
+    problem_type: "random_medium"
+    review: true
+    
+  day12_14:
+    date_offset: 13
+    focus: "Stabilization"
+    type: "stabilize"
+    instruction: "Repeat same pattern types until automatic"
+    target: "Medium in 30-35 min, correct code + tests"
+
+stress_management:
+  interrupts:
+    - trigger: "freeze"
+      action: "baseline"
+      prompt: "I will implement the simplest correct baseline first."
+    - trigger: "confused"
+      action: "invariant"
+      prompt: "What must be true after each step? I'll state it, then code."
+
+postmortem_template:
+  - "Pattern used"
+  - "Bug class (off-by-one, edge case, wrong invariant, API slip)"
+  - "Fix rule (one sentence)"
+  - "Micro-drill (5-min snippet for tomorrow)"
+  - "New test case that would have caught it"
+

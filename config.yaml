@@ -1,0 +1,78 @@
+# Interview Sprint Platform Configuration
+
+sprint:
+  name: "14-Day Interview Sprint"
+  start_date: null  # Set when you begin
+  total_days: 14
+
+timer:
+  default_duration_minutes: 35
+  stages:
+    - name: "RESTATE & PICK PATTERN"
+      duration_minutes: 2
+      prompt: "Restate the problem in your own words. What pattern fits?"
+    - name: "WRITE TESTS FIRST"
+      duration_minutes: 2
+      prompt: "Write 2-3 test cases before any implementation."
+    - name: "BASELINE IMPLEMENTATION"
+      duration_minutes: 15
+      prompt: "Implement the simplest correct solution. No optimizations yet."
+    - name: "EDGE CASES & CLEANUP"
+      duration_minutes: 5
+      prompt: "Handle edge cases. Clean up code. Add comments if needed."
+    - name: "BUFFER"
+      duration_minutes: 11
+      prompt: "Optimize if time permits. Otherwise, review your solution."
+
+  # Stress management interrupts
+  interrupts:
+    baseline_reminder:
+      at_minute: 4
+      message: "🧊 FREEZE → BASELINE: Implement the simplest correct solution first."
+    invariant_anchor:
+      at_minute: 10
+      message: "🎯 RE-ANCHOR: What must be true after each step? State your invariant."
+
+  audio_enabled: true
+
+postmortem:
+  template:
+    - "pattern_used"
+    - "bug_class"
+    - "fix_rule"
+    - "micro_drill"
+    - "new_test_case"
+  
+  bug_classes:
+    - "off-by-one"
+    - "missing edge case"
+    - "wrong invariant"
+    - "Python API slip"
+    - "logic error"
+    - "time complexity"
+    - "space complexity"
+
+patterns:
+  - id: hashmap
+    name: "Hashmap Grouping/Counting"
+  - id: two_pointers
+    name: "Two Pointers / Sliding Window"
+  - id: sorting
+    name: "Sorting with Key Functions"
+  - id: heap
+    name: "Heap / Top-K"
+  - id: binary_search
+    name: "Binary Search Boundaries"
+  - id: graph
+    name: "BFS/DFS with Visited"
+  - id: plumbing
+    name: "Data Plumbing Pipeline"
+
+stop_condition:
+  target_time_minutes: 30
+  max_time_minutes: 35
+  requirements:
+    - "correct code"
+    - "tests pass"
+    - "talked through approach"
+
