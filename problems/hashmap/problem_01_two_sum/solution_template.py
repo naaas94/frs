@@ -17,7 +17,12 @@ def two_sum(nums: List[int], target: int) -> Tuple[int, int]:
     INVARIANT: After processing index i, `seen` contains all values
     from indices [0, i] mapped to their indices.
     """
-    # TODO: Implement your solution here
+    seen = {}
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in seen:
+            return(seen[complement],i)
+        seen[num] = i
     pass
 
 
