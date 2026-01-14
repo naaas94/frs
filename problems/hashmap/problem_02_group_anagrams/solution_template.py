@@ -17,7 +17,11 @@ def group_anagrams(strs: List[str]) -> List[List[str]]:
     INVARIANT: After processing string i, all anagrams seen so far
     are in the same group (keyed by their canonical form).
     """
-    # TODO: Implement your solution here
+    groups = defaultdict(list)
+    for s in strs: 
+        key = tuple(sorted(s))
+        groups[key].append(s)
+    return list(groups.values())
     pass
 
 
