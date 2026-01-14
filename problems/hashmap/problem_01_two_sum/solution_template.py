@@ -4,6 +4,14 @@ from typing import List, Tuple
 
 
 def two_sum(nums: List[int], target: int) -> Tuple[int, int]:
+    seen = {} 
+    for i, num in enumerate(nums): 
+        complement = target - num
+        if complement in seen:
+            return(seen[complement], i)
+        else: seen[num] = i
+        continue
+    
     """
     Find two indices whose values sum to target.
     
@@ -31,3 +39,9 @@ if __name__ == "__main__":
     result = two_sum([2, 7, 11, 15], 9)
     print(f"Result: {result}")
 
+###tests:
+
+result = two_sum([1,4,2,6], 7)
+result_1 = two_sum([2,5,7,1], 8)
+
+print(result, result_1)
