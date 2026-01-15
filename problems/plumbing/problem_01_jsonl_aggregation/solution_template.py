@@ -4,6 +4,8 @@ import json
 from typing import List, Dict, Any
 from collections import defaultdict
 
+from templates.patterns.plumbing import validate_record
+
 
 def aggregate_logs(logs: List[str]) -> Dict[str, Any]:
     """
@@ -19,13 +21,40 @@ def aggregate_logs(logs: List[str]) -> Dict[str, Any]:
     aggregation for all valid records [1, i], and errors contains
     all parse/validation failures.
     """
-    # TODO: Implement your solution here
-    # Steps:
-    # 1. PARSE: Try json.loads(), catch JSONDecodeError
-    # 2. VALIDATE: Check required fields exist
-    # 3. AGGREGATE: Update endpoint stats
-    # 4. SELECT: Sort by count descending
-    # 5. REPORT: Return metrics + errors
+    ## parse -> validate -> normalize -> aggregate -> select -> report
+    #
+    data = [logs]
+    errors = []
+    results = {}
+
+    #parse
+    try parsed = json.loads(raw)
+    except Exception as e:
+        errors.append(e, "stage:parsing", "error type", json.JSONDecodeError,loc, snippet/raw)
+        
+        continue 
+
+    #validate 
+
+    try msg = validate_record(parsed)
+        if msg: 
+            parsed if isinstance(parsed, str) else None 
+    except Exception as e: 
+        errors.append(e, "stage:validation", "error type", json.JSONDecodeError,loc, snippet/raw)
+
+    #nomralize
+
+    try clean = normalize(parsed)
+        parsed if isinstance(parsed, str) else None
+    except Exception as e: 
+        errors.append(e, "stage:normalization", "error type", json.JSONDecodeError,loc, snippet/raw)
+
+       
+
+
+
+
+
     pass
 
 
