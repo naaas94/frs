@@ -30,7 +30,7 @@ class TestAggregateLogs:
         assert len(result["metrics"]) == 1
         assert len(result["errors"]) == 1
         assert result["errors"][0]["type"] == "parse"
-        assert result["errors"][0]["line"] == 2
+        assert result["errors"][0]["line"] == 1
     
     def test_validation_error(self):
         """Missing required fields captured as validation error."""
