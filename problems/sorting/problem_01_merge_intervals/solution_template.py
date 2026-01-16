@@ -16,8 +16,17 @@ def merge(intervals: List[List[int]]) -> List[List[int]]:
     INVARIANT: After sorting by start, overlapping intervals are
     adjacent. We merge if current.start <= last.end.
     """
-    # TODO: Implement your solution here
-    pass
+    intervals.sort(key= lambda x: x[0])
+    merged = [intervals[0]]
+    last_end = merged[-1][1]
+    for s, e in intervals:
+        if s <= last_end:
+            merged[-1][1] = max(last_end, e)
+        else: merged.append([s,e])
+    return merged
+        
+        
+    
 
 
 if __name__ == "__main__":
