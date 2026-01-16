@@ -43,13 +43,7 @@ env/
 solutions/*
 !solutions/.gitkeep
 
-# Logs (personal progress)
-logs/sessions/*
-logs/postmortems/*
-logs/metrics.json
-!logs/.gitkeep
-!logs/sessions/.gitkeep
-!logs/postmortems/.gitkeep
+
 
 # OS
 .DS_Store

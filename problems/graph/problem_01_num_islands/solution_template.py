@@ -31,3 +31,4 @@ if __name__ == "__main__":
     result = num_islands(grid)
     print(f"Result: {result}")  # Expected: 3
 
+

@@ -1,0 +1,12 @@
+{
+  "timestamp": "2026-01-14T18:44:44.323512",
+  "problem": "two_sum",
+  "pattern_used": "hashmap",
+  "bug_class": "no bugs",
+  "fix_rule": "n/a - remember to use enumerate to get index of iterated items - when return(seen not return(touple or anything funny",
+  "micro_drill": "some reps I guess",
+  "new_test_case": "n/a",
+  "notes": "no",
+  "confidence": 3,
+  "session": "2026-01-14T18:27:28.374436"
+}

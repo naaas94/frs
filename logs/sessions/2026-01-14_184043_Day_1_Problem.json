@@ -1,0 +1,27 @@
+{
+  "problem": "Day 1 Problem",
+  "start_time": "2026-01-14T18:27:28.374436",
+  "end_time": "2026-01-14T18:40:43.911936",
+  "stages": [
+    {
+      "name": "RESTATE & PICK PATTERN",
+      "completed_at": 120
+    },
+    {
+      "name": "WRITE TESTS FIRST",
+      "completed_at": 240
+    }
+  ],
+  "interrupts_shown": [
+    {
+      "name": "baseline_reminder",
+      "at_minute": 4,
+      "message": "\u00f0\u0178\u00a7\u0160 FREEZE \u00e2\u2020\u2019 BASELINE: Implement the simplest correct solution first."
+    },
+    {
+      "name": "invariant_anchor",
+      "at_minute": 10,
+      "message": "\u00f0\u0178\u017d\u00af RE-ANCHOR: What must be true after each step? State your invariant."
+    }
+  ]
+}

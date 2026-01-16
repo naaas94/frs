@@ -1,0 +1,32 @@
+{
+  "total_sessions": 2,
+  "patterns": {
+    "hashmap": 2
+  },
+  "bug_classes": {
+    "no bugs": 1,
+    "logic error": 1
+  },
+  "confidence_by_pattern": {
+    "hashmap": {
+      "total": 6,
+      "count": 2,
+      "average": 3.0
+    }
+  },
+  "daily_sessions": {
+    "2026-01-14": 2
+  },
+  "micro_drills_pending": [
+    {
+      "drill": "some reps I guess",
+      "pattern": "hashmap",
+      "date": "2026-01-14"
+    },
+    {
+      "drill": "have another go",
+      "pattern": "hashmap",
+      "date": "2026-01-14"
+    }
+  ]
+}

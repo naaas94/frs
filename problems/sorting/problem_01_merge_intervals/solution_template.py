@@ -24,3 +24,4 @@ if __name__ == "__main__":
     result = merge([[1, 3], [2, 6], [8, 10], [15, 18]])
     print(f"Result: {result}")  # Expected: [[1,6],[8,10],[15,18]]
 
+

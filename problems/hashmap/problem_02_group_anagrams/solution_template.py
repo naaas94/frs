@@ -29,3 +29,4 @@ if __name__ == "__main__":
     result = group_anagrams(["eat", "tea", "tan", "ate", "nat", "bat"])
     print(f"Result: {result}")
 
+
