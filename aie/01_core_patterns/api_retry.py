@@ -255,28 +255,118 @@ PROBLEM 1: Basic Retry
 Task: Write a function that calls an API, retrying up to 3 times with 1s delay.
 Test: Mock function that fails first 2 times, succeeds on 3rd.
 Expected: Returns result after 3rd attempt.
+"""
+def call_with_retry(
+    fn: Callable[[],T],
+    max_attempts: int = 3,
+    base_delay: float = 1.0    
+    ) -> T:
 
+    last_exception = None
+
+    for attempt in range(max_attempts):
+        try:
+            return fn()
+        except Exception as e:
+            last_exception = e
+            if attempt == max_attempts - 1:
+                raise
+            
+            delay = base_delay * (2** attempt)
+            time.sleep(delay)
+    raise last_exception
+"""
 PROBLEM 2: Retry Decorator
 --------------------------
 Task: Write a @retry decorator that wraps any function.
 Usage: @retry(max_attempts=3, delay=1.0)
 Test: Decorate a flaky function, verify it retries.
+"""
+def retry(max_attempts: int = 3, base_delay: float = 1.0):
+    def decorator(fn: Callable[[],T]) -> Callable[[],T]:
+        @wraps(fn)
+        def wrapper(*args, **kwargs) -> T:
+            return call_with_retry(
+                lambda: fn(*args, **kwargs),
+                max_attempts = max_attempts,
+                base_delay = base_delay,
+            )
+        return wrapper
+    return decorator
 
+"""
 PROBLEM 3: Specific Exceptions
 ------------------------------
 Task: Only retry on TimeoutError and ConnectionError, not ValueError.
 Test: Function that raises ValueError should fail immediately.
+"""
+def retry_with_specific_exceptions(
+    fn: Callable[[],T],
+    exceptions: tuple[type[Exception], ...],
+    max_attempts: int = 3,
+    base_delay: float = 1.0,
+) -> T:
+    for attempt in range(max_attempts):
+        try:
+            return fn()
+        except exceptions as e:
+            if attempt == max_attempts - 1:
+                raise
+            delay = base_delay * (2 ** attempt)
+            time.sleep(delay)
+    raise RuntimeError("unreachable")   
+"""
 
 PROBLEM 4: With Jitter
 ----------------------
 Task: Add ±25% jitter to delay.
 Test: Run multiple retries, verify delays are randomized.
+"""
+def retry_with_jitter(
+    fn: Callable[[],T],
+    max_attempts: int = 3,
+    base_delay:float = 1.0,
+    jitter: float = 0.5
+) -> T:
 
+    for attempt in range(max_attempts):
+        try:
+            return fn()
+        except Exception:
+            if attempt == max_attemps -1:
+                raise
+            delay = base_delay * (2** attempt)
+            jitter = delay * (1 + random.uniform(-jitter, jitter))
+            time.sleep(jitter)
+    raise RuntimeError("unreachable")
+
+
+"""
 PROBLEM 5: Async Retry
 ----------------------
 Task: Write async version using asyncio.sleep.
 Test: Async function that fails twice, verify await works.
+"""
+async def async_retry(
+    fn: Callable[[], Any],
+    max_attempts: int = 3,
+    base_delay: float = 1.0
+) -> Any:
 
+    for attempt in range(max_attempts):
+        try:
+            result = fn()
+            if asyncio.iscoroutine(result):
+                return await result
+            return result
+        except Exception:
+            if attempt == max_attempts - 1:
+                raise
+            await asyncio.sleep(base_delay * (2**attempt))
+    raise RuntimeError("unreachable")
+
+
+"""
 PROBLEM 6: Full LLM Pattern
 ---------------------------
 Task: Combine retry with:
