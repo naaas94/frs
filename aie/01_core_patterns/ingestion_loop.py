@@ -210,7 +210,7 @@ def basic_filter(people: list[dict]) -> tuple[list[dict], list[dict]]:
         
     return adults, errors
 
-def is_valid(person: object) -> bool:
+def is_valid(person: Any) -> bool:
 
     if not isinstance(person, dict):
         return False
@@ -221,20 +221,18 @@ def is_valid(person: object) -> bool:
     if not isinstance(person["name"], str):
         return False
     
-    if not isinstance(person["age"], int):
+    if isinstance(person["age"], bool) or not isinstance(person["age"], int):
         return False
-    
+
     if person["age"] < 0:
         return False
-    
-    
-
     return True
 
 
 
 
 
+### this is fine the errors are due to name collision with other is_valid()
 
 
 
@@ -270,14 +268,16 @@ def ingest_valid_email(items: list[dict]) -> tuple[list[dict], list[dict]]:
 
 def is_valid(item: dict) -> bool:
 
+    # also the rest of the validations like isininstance for all and also if fields are in person
     if "@" not in item["email"]:
         return False
+    return True
 
 
-def clean(item: dict):
-
-    item["email"] = item["email"].lower()
-
+def clean(item: dict) -> dict:
+    return {
+        "email": item["email"].strip().lower()
+        }
 
 
 
