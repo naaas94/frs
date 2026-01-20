@@ -15,6 +15,7 @@ When to use:
 Time target: Write from memory in < 3 minutes
 """
 
+import collections
 from typing import Any
 
 
@@ -297,26 +298,39 @@ Task: Filter to "active" only, return sum of values and count
 Expected: {"records": [...], "total_value": 30, "count": 2}
 """
 
-def ingest_with_aggregation(items: list[dict]) -> dict:
+def ingest_with_aggregations(items: list[dict]) -> tuple[list[dict], list[dict]]:
 
-    records: list = []
-    total_value: int = 0
-    count: int = 0
+# from collections import defaultdict
+
+    valid: list = []
+    errors = []
+    counts = defaultdict(dict)
+
 
     for i, item in enumerate(items):
+        if not is_valid(item):
+            errors.append({"index":i, "item": item, "type": "invalid"})
+            continue
+        #skip clean / normalization
+        valid.append(item)
 
-        if is_valid(item):
-            total_value += item["value"]
-            records.append(item)
-            count += 1 
+        category = item.get("status", "unknown")
+        counts[category] +=1
+
+    return {
+        "valid": valid,
+        "errors": errors,
+        "counts": counts
+    }
 
 def is_valid(item: dict) -> bool:
 
     if item.get("status") != "active":
         return False
+    return True
 
             
-
+####### WROOONGGG
 
 
 
