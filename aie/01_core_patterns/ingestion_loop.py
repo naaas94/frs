@@ -193,19 +193,135 @@ PROBLEM 1: Basic Filter
 Input: [{"name": "Alice", "age": 25}, {"name": "Bob"}, {"age": 30}, {"name": "Charlie", "age": 15}]
 Task: Return only records with both name AND age, where age >= 18
 Expected: ([{"name": "Alice", "age": 25}], [errors for invalid records])
+"""
+
+def basic_filter(people: list[dict]) -> tuple[list[dict], list[dict]]:
+
+    adults = []
+    errors = []
+
+    for i, person in enumerate(people):
+        if not is_valid(person):
+            errors.append({"index":i, "error":"invalid", "person":person})
+            continue
+
+        if person["age"] >= 18:
+            adults.append(person)
+        
+    return adults, errors
+
+def is_valid(person: object) -> bool:
+
+    if not isinstance(person, dict):
+        return False
+    
+    if "name" not in person or "age" not in person:
+        return False
+
+    if not isinstance(person["name"], str):
+        return False
+    
+    if not isinstance(person["age"], int):
+        return False
+    
+    if person["age"] < 0:
+        return False
+    
+    
+
+    return True
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
 
 PROBLEM 2: With Transformation
 ------------------------------
 Input: [{"email": "ALICE@TEST.COM"}, {"email": "bob"}, {"email": "charlie@example.org"}]
 Task: Filter to valid emails (contain "@"), normalize to lowercase
 Expected: ([{"email": "alice@test.com"}, {"email": "charlie@example.org"}], [error for "bob"])
+"""
+
+def ingest_valid_email(items: list[dict]) -> tuple[list[dict], list[dict]]:
+
+    valid = []
+    errors = []
+
+    for i, item in enumerate(items):
+        if not is_valid(item):
+            errors.append({"index":i, "item":item, "error":"invalid"})
+            continue
+
+        cleaned = clean(item)
+        valid.append(cleaned)
+
+    return valid, errors
+
+
+def is_valid(item: dict) -> bool:
+
+    if "@" not in item["email"]:
+        return False
+
+
+def clean(item: dict):
+
+    item["email"] = item["email"].lower()
+
+
+
+
+
+
+
+
+
+
+"""
+
 
 PROBLEM 3: With Aggregation
 ---------------------------
 Input: [{"status": "active", "value": 10}, {"status": "inactive", "value": 5}, {"status": "active", "value": 20}]
 Task: Filter to "active" only, return sum of values and count
 Expected: {"records": [...], "total_value": 30, "count": 2}
+"""
 
+def ingest_with_aggregation(items: list[dict]) -> dict:
+
+    records: list = []
+    total_value: int = 0
+    count: int = 0
+
+    for i, item in enumerate(items):
+
+        if is_valid(item):
+            total_value += item["value"]
+            records.append(item)
+            count += 1 
+
+def is_valid(item: dict) -> bool:
+
+    if item.get("status") != "active":
+        return False
+
+            
+
+
+
+
+
+"""
 PROBLEM 4: Nested Records
 -------------------------
 Input: [{"user": {"name": "Alice", "age": 25}}, {"user": {"name": "Bob"}}, {"user": null}]
@@ -214,6 +330,31 @@ Expected: ([{"name": "Alice", "age": 25}], [errors for others])
 """
 
 
+def nested_records_ingestion(items: list[dict]) -> tuple[list[dict], list[dict]]:
+
+    valid_users: list = []
+    errors = []
+
+    for i, item in enumerate(items): 
+        u = item.get("user")
+        if isinstance(u, dict) and isinstance(u.get("age"), int):
+            valid_users.append(u)
+        else:
+            errors.append({"index":i,"error":"invalid","item":u})
+    return valid_users, errors
+
+    
+
+
+
+
+
+
+
+
+
+"""
+"""
 # =============================================================================
 # SELF-TEST
 # =============================================================================
@@ -228,7 +369,7 @@ if __name__ == "__main__":
         {"name": "Eve", "age": 21},
     ]
     
-    adults, errors = filter_adults(test_data)
+    adults, errors = basic_filter(test_data)
     
     print("Adults:", adults)
     print("Errors:", errors)
