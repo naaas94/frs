@@ -373,6 +373,32 @@ Task: Both custom validations should fail
 Expected: (False, ["validation failed: email", "validation failed: age"])
 """
 
+def with_custom_validators(
+        record: dict,
+        schema: dict,
+        validators: dict[str, Callable[[Any], bool]] | None = None,
+) -> tuple[bool, list]:
+
+    errors = []
+    validators = validators or {}
+
+    for field, expected_type in schema.items():
+            if field not in record:
+                errors.append(f"missing: {field}")
+                continue
+
+            if not isinstance(record[field], expected_type):
+                errors.append(f"type error: {field}")
+                continue
+
+            value = record[field]
+
+            if field in validators:
+                if not validators[field](value):
+                    errors.append(f"Validation error: {field}")
+
+    return len(errors) == 0, errors
+
 
 
 
@@ -402,6 +428,34 @@ Input: [
 Task: Return valid records and errors
 Expected: valid=[first], invalid=[second and third with error details]
 """
+
+
+def batch_validation(records: list[dict], schema: dict) -> tuple[list[dict], list[dict]]:
+
+    valid = []
+    invalid = []
+
+
+    for i, item in enumerate(records):
+
+        if isinstance(item, dict):
+            for field, expected_type in schema.items():
+                if field not in item:
+                    invalid.append({"index":i,"item":item, "error": f"missing {field}"})
+                    continue
+
+                if not isinstance(item[field], expected_type):
+                    invalid.append({"index":i,"item":item,"error": f"type error {field}"})
+            
+            valid.append(item)
+    return valid, invalid
+
+### HAVE TO RE DO THIS ONE - FAILED 
+
+### ----------------------------------------------------------------------
+
+
+
 
 
 # =============================================================================
