@@ -232,6 +232,36 @@ Input: {"name": "Alice", "age": "25", "active": True}
 Task: Validate and return errors
 Expected: (False, ["type error: age (expected int, got str)"])
 
+"""
+
+def validate_input(record:dict, schema:dict) -> tuple[bool, list]:
+
+    errors = []
+
+    if isinstance(record, dict):
+
+        for field, expected_type in schema.items():
+                        
+                if field not in record:
+                    errors.append(f"missing: {field}")
+                    
+
+                if not isinstance(record[field], expected_type):
+                    errors.append(f"type error: {field} (expected {expected_type.__name__}, got {type(record[field]).__name__})")
+                    
+    else:
+        errors.append(f"record not a dict {record}")
+
+                    
+    return len(errors) == 0, errors
+
+
+
+
+
+
+"""
+
 PROBLEM 2: With Optional Fields
 -------------------------------
 Required: {"id": int, "name": str}
@@ -239,6 +269,44 @@ Optional: {"email": str, "phone": str}
 Input: {"id": 1, "name": "Alice", "phone": 12345}
 Task: Validate - id and name ok, phone has wrong type
 Expected: (False, ["type error (optional): phone"])
+
+"""
+
+def validate_with_optional_fields(
+    record: dict, 
+    required: dict[str, type],
+    optional: dict[str, type] | None = None,
+    ) -> tuple[bool, list]:
+
+    errors = []
+
+    for field, expected_type in required.items():
+        if field not in record:
+            errors.append(f"missing {field}")
+            continue
+
+        if not isinstance(record[field], expected_type):
+            errors.append(f"type error: {field}")
+            continue
+
+
+    if optional:
+        for field, expected_type in optional.items():
+            if field in record:
+                if not isinstance(record[field], expected_type):
+                    errors.append(f"type error (optional): {field}")
+
+    return len(errors) == 0, errors
+
+        
+    
+
+
+
+
+
+
+"""
 
 PROBLEM 3: Nested Validation
 ----------------------------
@@ -249,6 +317,52 @@ Schema: {
 Input: {"user": {"name": "Alice"}, "metadata": {"created": "2024-01-01"}}
 Task: Validate nested structure
 Expected: (False, ["user.missing: age"])
+"""
+
+def nested_validation(record: dict, schema:dict) -> tuple[bool, list]:
+
+    errors = []
+
+    for field, expected_type in schema.items():
+        if field not in record:
+            errors.append(f"missing: {field}")
+            continue
+
+        value = record[field]
+
+        if isinstance(expected_type, dict):
+            if not isinstance(value, dict):
+                errors.append(f"type error: {field}")
+
+            else:
+                is_valid, nested_errors = nested_validation(value, expected_type)
+                errors.extend(f"{field}.{e}" for e in nested_errors)
+
+        else: 
+
+            if not isinstance(value, expected_type):
+                errors.append(f"type error: {field}")
+
+    return len(errors) == 0, errors
+
+
+
+### this took a while a some lookups - also self recursion and not just call a diff funct
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+
 
 PROBLEM 4: Custom Validators
 ----------------------------
@@ -257,6 +371,25 @@ Validators: {"email": lambda x: "@" in x, "age": lambda x: x >= 0}
 Input: {"email": "invalid-email", "age": -5}
 Task: Both custom validations should fail
 Expected: (False, ["validation failed: email", "validation failed: age"])
+"""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+""" 
+
+
 
 PROBLEM 5: Batch Validation
 ---------------------------

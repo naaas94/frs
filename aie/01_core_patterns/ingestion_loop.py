@@ -298,30 +298,33 @@ Task: Filter to "active" only, return sum of values and count
 Expected: {"records": [...], "total_value": 30, "count": 2}
 """
 
-def ingest_with_aggregations(items: list[dict]) -> tuple[list[dict], list[dict]]:
+def ingest_with_aggregations(items: list[dict]) -> dict:
 
 # from collections import defaultdict
 
-    valid: list = []
-    errors = []
-    counts = defaultdict(dict)
+	valid = []
+	errors = []
+	
+
+	for i, item in enumerate(items):
+
+		if not is_valid(item):
+			errors.append({"index":i, "item": item, "type": "invalid"})
+			continue
+
+		valid.append(item)
+
+		
+	total_value = sum(item["value"] for item in valid)
+	count = len(valid)
 
 
-    for i, item in enumerate(items):
-        if not is_valid(item):
-            errors.append({"index":i, "item": item, "type": "invalid"})
-            continue
-        #skip clean / normalization
-        valid.append(item)
-
-        category = item.get("status", "unknown")
-        counts[category] +=1
-
-    return {
-        "valid": valid,
-        "errors": errors,
-        "counts": counts
+	return 	{
+        "records": valid,
+        "total_value": total_value,
+        "count": count,
     }
+
 
 def is_valid(item: dict) -> bool:
 
@@ -330,8 +333,6 @@ def is_valid(item: dict) -> bool:
     return True
 
             
-####### WROOONGGG
-
 
 
 
