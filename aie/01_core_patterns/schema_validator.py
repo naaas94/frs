@@ -430,25 +430,26 @@ Expected: valid=[first], invalid=[second and third with error details]
 """
 
 
-def batch_validation(records: list[dict], schema: dict) -> tuple[list[dict], list[dict]]:
+def validate_batch(
+        records: dict,
+        schema: dict,
+) -> tuple[list[dict], list[dict]]:
 
+    errors = []
     valid = []
-    invalid = []
-
 
     for i, item in enumerate(records):
 
-        if isinstance(item, dict):
-            for field, expected_type in schema.items():
-                if field not in item:
-                    invalid.append({"index":i,"item":item, "error": f"missing {field}"})
-                    continue
-
-                if not isinstance(item[field], expected_type):
-                    invalid.append({"index":i,"item":item,"error": f"type error {field}"})
-            
+        is_valid, errors = validate_record(item, schema)
+        if is_valid:
             valid.append(item)
-    return valid, invalid
+
+        else:
+            errors.append({"index":i, "record": item, "errors": errors})
+
+    return valid, errors
+
+
 
 ### HAVE TO RE DO THIS ONE - FAILED 
 

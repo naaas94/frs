@@ -346,19 +346,29 @@ Expected: ([{"name": "Alice", "age": 25}], [errors for others])
 
 
 def nested_records_ingestion(items: list[dict]) -> tuple[list[dict], list[dict]]:
+    valid_users: list[dict] = []
+    errors: list[dict] = []
 
-    valid_users: list = []
-    errors = []
-
-    for i, item in enumerate(items): 
+    for i, item in enumerate(items):
         u = item.get("user")
-        if isinstance(u, dict) and isinstance(u.get("age"), int):
-            valid_users.append(u)
-        else:
-            errors.append({"index":i,"error":"invalid","item":u})
-    return valid_users, errors
+        if not isinstance(u, dict):
+            errors.append({"index": i, "error": "user not object", "user": u})
+            continue
 
-    
+        name = u.get("name")
+        age = u.get("age")
+
+        if not isinstance(name, str):
+            errors.append({"index": i, "error": "invalid name", "user": u})
+            continue
+
+        if isinstance(age, bool) or not isinstance(age, int):
+            errors.append({"index": i, "error": "invalid age", "user": u})
+            continue
+
+        valid_users.append({"name": name, "age": age})
+
+    return valid_users, errors
 
 
 
