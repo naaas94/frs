@@ -16,7 +16,7 @@ Time target: Write from memory in < 3 minutes
 """
 
 import collections
-from typing import Any
+from typing import Any, Dict
 
 
 # =============================================================================
@@ -211,7 +211,7 @@ def basic_filter(people: list[dict]) -> tuple[list[dict], list[dict]]:
         
     return adults, errors
 
-def is_valid(person: Any) -> bool:
+def is_valid(person: dict) -> bool:
 
     if not isinstance(person, dict):
         return False
