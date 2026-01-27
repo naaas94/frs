@@ -223,6 +223,7 @@ def validate_nested(record: dict, schema: dict) -> tuple[bool, list[str]]:
 
 # =============================================================================
 # DRILL 05: JSONL Cleaner (Ingestion + Schema)
+    # lets do 5 more ok ### 
 # Target time: 10 minutes
 # =============================================================================
 
@@ -300,6 +301,7 @@ def process_jsonl(lines: list[str]) -> dict[str, Any]:
 
 # =============================================================================
 # DRILL 06: Resilient API Call (Schema + Retry)
+    #    LETS DO 10 MORE OF THIS ####################
 # Target time: 10 minutes
 # =============================================================================
 
@@ -365,6 +367,9 @@ def fetch_and_validate(
 
 # =============================================================================
 # DRILL 07: Batch Processor (Full Pipeline)
+
+          # LETS DO 10 MORE BABYYYY ######################
+
 # Target time: 15 minutes
 # =============================================================================
 
@@ -449,6 +454,10 @@ def process_batch(
 
 # =============================================================================
 # DRILL 08: Config Validator with Defaults
+
+    ### COOL SHIT BRAH LETS DO 10 MORE ######
+
+    # YOU AND ME BABY. ME, YOU, YOU, ME, ME, YOU, YOU, ME, YOU, ME, etc ### 
 # Target time: 10 minutes
 # =============================================================================
 
