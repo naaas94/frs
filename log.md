@@ -4,3 +4,6 @@ todo:
 ###  DRILL 07: Batch Processor (Full Pipeline) x10
 ###  DRILL 06: Resilient API Call (Schema + Retry) x10
 ### # DRILL 05: JSONL Cleaner (Ingestion + Schema) x5
+
+
+---- asdasda
