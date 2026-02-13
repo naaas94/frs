@@ -51,6 +51,17 @@ PATTERNS = [
     "other"
 ]
 
+AIE_PATTERNS = [
+    "ingestion_validation",
+    "schema_retry",
+    "fastapi_basics",
+    "fastapi_async",
+    "production_api",
+    "agents_tools",
+    "system_design",
+    "other",
+]
+
 BUG_CLASSES = [
     "off-by-one",
     "missing edge case",
@@ -91,7 +102,12 @@ class PostmortemCapture:
                 return json.load(f)
         return None
     
-    def capture_rich(self, problem_override: Optional[str] = None) -> Dict:
+    def capture_rich(
+        self,
+        problem_override: Optional[str] = None,
+        track_mode: Optional[str] = None,
+        aie_pattern_hint: Optional[str] = None,
+    ) -> Dict:
         """Capture postmortem with rich prompts."""
         self.console.print(Panel(
             "[bold cyan]POST-MORTEM CAPTURE[/]\n\n"
@@ -124,6 +140,27 @@ class PostmortemCapture:
             default="1"
         )
         pattern_used = PATTERNS[int(pattern_idx) - 1]
+
+        inferred_track_mode = track_mode
+        if not inferred_track_mode and self.last_session:
+            inferred_track_mode = self.last_session.get("track_mode")
+
+        aie_pattern_used = None
+        if inferred_track_mode == "aie":
+            self.console.print("\n[bold]2b. AIE pattern used[/]")
+            for i, pattern in enumerate(AIE_PATTERNS, 1):
+                self.console.print(f"   {i}. {pattern}")
+
+            default_idx = "1"
+            if aie_pattern_hint and aie_pattern_hint in AIE_PATTERNS:
+                default_idx = str(AIE_PATTERNS.index(aie_pattern_hint) + 1)
+
+            aie_idx = Prompt.ask(
+                "Select AIE pattern (number)",
+                choices=[str(i) for i in range(1, len(AIE_PATTERNS) + 1)],
+                default=default_idx,
+            )
+            aie_pattern_used = AIE_PATTERNS[int(aie_idx) - 1]
         
         # Bug class
         self.console.print("\n[bold]3. Primary bug class[/]")
@@ -176,6 +213,8 @@ class PostmortemCapture:
             "timestamp": datetime.now().isoformat(),
             "problem": problem,
             "pattern_used": pattern_used,
+            "track_mode": inferred_track_mode or "core",
+            "aie_pattern_used": aie_pattern_used,
             "bug_class": bug_class,
             "fix_rule": fix_rule,
             "micro_drill": micro_drill,
@@ -187,7 +226,12 @@ class PostmortemCapture:
         
         return postmortem
     
-    def capture_simple(self, problem_override: Optional[str] = None) -> Dict:
+    def capture_simple(
+        self,
+        problem_override: Optional[str] = None,
+        track_mode: Optional[str] = None,
+        aie_pattern_hint: Optional[str] = None,
+    ) -> Dict:
         """Capture postmortem with simple prompts."""
         print("\n" + "="*50)
         print("POST-MORTEM CAPTURE")
@@ -208,6 +252,22 @@ class PostmortemCapture:
             print(f"   {i}. {pattern}")
         pattern_idx = input("Select pattern (number) [1]: ").strip() or "1"
         pattern_used = PATTERNS[int(pattern_idx) - 1]
+
+        inferred_track_mode = track_mode
+        if not inferred_track_mode and self.last_session:
+            inferred_track_mode = self.last_session.get("track_mode")
+
+        aie_pattern_used = None
+        if inferred_track_mode == "aie":
+            print("\n2b. AIE pattern used:")
+            for i, pattern in enumerate(AIE_PATTERNS, 1):
+                print(f"   {i}. {pattern}")
+
+            default_idx = "1"
+            if aie_pattern_hint and aie_pattern_hint in AIE_PATTERNS:
+                default_idx = str(AIE_PATTERNS.index(aie_pattern_hint) + 1)
+            aie_idx = input(f"Select AIE pattern (number) [{default_idx}]: ").strip() or default_idx
+            aie_pattern_used = AIE_PATTERNS[int(aie_idx) - 1]
         
         # Bug class
         print("\n3. Primary bug class:")
@@ -232,6 +292,8 @@ class PostmortemCapture:
             "timestamp": datetime.now().isoformat(),
             "problem": problem,
             "pattern_used": pattern_used,
+            "track_mode": inferred_track_mode or "core",
+            "aie_pattern_used": aie_pattern_used,
             "bug_class": bug_class,
             "fix_rule": fix_rule,
             "micro_drill": micro_drill,
@@ -243,12 +305,17 @@ class PostmortemCapture:
         
         return postmortem
     
-    def capture(self, problem_override: Optional[str] = None) -> Dict:
+    def capture(
+        self,
+        problem_override: Optional[str] = None,
+        track_mode: Optional[str] = None,
+        aie_pattern_hint: Optional[str] = None,
+    ) -> Dict:
         """Capture postmortem using best available UI."""
         if RICH_AVAILABLE and self.console:
-            return self.capture_rich(problem_override)
+            return self.capture_rich(problem_override, track_mode=track_mode, aie_pattern_hint=aie_pattern_hint)
         else:
-            return self.capture_simple(problem_override)
+            return self.capture_simple(problem_override, track_mode=track_mode, aie_pattern_hint=aie_pattern_hint)
     
     def save(self, postmortem: Dict) -> Path:
         """Save postmortem to file."""
@@ -279,7 +346,9 @@ class PostmortemCapture:
 
 | Field | Value |
 |-------|-------|
+| Track | {postmortem.get('track_mode', 'core')} |
 | Pattern | {postmortem['pattern_used']} |
+| AIE Pattern | {postmortem.get('aie_pattern_used') or 'N/A'} |
 | Bug Class | {postmortem['bug_class']} |
 | Confidence | {postmortem['confidence']}/5 |
 
@@ -315,6 +384,7 @@ class PostmortemCapture:
                 "patterns": {},
                 "bug_classes": {},
                 "confidence_by_pattern": {},
+                "aie_patterns": {},
                 "daily_sessions": {},
                 "micro_drills_pending": []
             }
@@ -324,6 +394,12 @@ class PostmortemCapture:
         
         pattern = postmortem["pattern_used"]
         metrics["patterns"][pattern] = metrics["patterns"].get(pattern, 0) + 1
+
+        aie_pattern = postmortem.get("aie_pattern_used")
+        if "aie_patterns" not in metrics:
+            metrics["aie_patterns"] = {}
+        if aie_pattern:
+            metrics["aie_patterns"][aie_pattern] = metrics["aie_patterns"].get(aie_pattern, 0) + 1
         
         bug = postmortem["bug_class"]
         metrics["bug_classes"][bug] = metrics["bug_classes"].get(bug, 0) + 1
@@ -366,6 +442,8 @@ class PostmortemCapture:
             
             table.add_row("Problem:", f"[bold]{postmortem['problem']}[/]")
             table.add_row("Pattern:", f"[cyan]{postmortem['pattern_used']}[/]")
+            if postmortem.get("aie_pattern_used"):
+                table.add_row("AIE Pattern:", f"[magenta]{postmortem['aie_pattern_used']}[/]")
             table.add_row("Bug Class:", f"[yellow]{postmortem['bug_class']}[/]")
             table.add_row("Fix Rule:", postmortem['fix_rule'])
             table.add_row("Micro-Drill:", f"[green]{postmortem['micro_drill']}[/]")
@@ -386,6 +464,8 @@ class PostmortemCapture:
             print("="*50)
             print(f"Problem: {postmortem['problem']}")
             print(f"Pattern: {postmortem['pattern_used']}")
+            if postmortem.get("aie_pattern_used"):
+                print(f"AIE Pattern: {postmortem['aie_pattern_used']}")
             print(f"Bug Class: {postmortem['bug_class']}")
             print(f"Fix Rule: {postmortem['fix_rule']}")
             print(f"Micro-Drill: {postmortem['micro_drill']}")

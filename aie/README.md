@@ -1,18 +1,25 @@
 # AI Engineer Interview Prep Track
 
-A focused, practical preparation track for AI Engineer, Forward Deployed Engineer, and AI Solutions Architect roles.
+A focused, practical preparation track for **API- and product-focused AI Engineer** roles: calling OpenAI/Anthropic (or similar), building RAG/agents, and owning APIs and reliability.
+
+---
+
+## Start Here
+
+**[ROADMAP.md](ROADMAP.md)** — Your step-by-step path: Phase 1 (foundations) → Phase 2 (drills + mocks) → Phase 3 (sprint hub). Use it as the sequence; use **00_sprint_hub/** for daily focus and the gates checklist.
 
 ---
 
 ## What This Track Covers
 
-This track focuses on the **practical coding patterns** that appear in AI Engineer interviews - not LeetCode-style algorithms, but the real-world patterns you'll use daily:
+Practical coding patterns that show up in AIE interviews (not LeetCode-style algorithms):
 
 | Module | Focus | Time to Master |
 |--------|-------|----------------|
-| **01_core_patterns/** | The 3 essential patterns (ingestion, validation, retry) | 2-3 days |
-| **02_fastapi_fundamentals/** | Building AI APIs from scratch | 2-3 days |
-| **03_drills/** | Timed practice combining everything | Ongoing |
+| **01_core_patterns/** | Ingestion, schema validation, retry with backoff | 2-3 days |
+| **02_fastapi_fundamentals/** | Building AI APIs (routing, Pydantic, async, guardrails) | 2-3 days |
+| **03_drills/** | Timed practice combining patterns; pytest-backed | Ongoing |
+| **00_sprint_hub/** | Gates checklist, AIE mock prompts, agents lab, devops notes | Ongoing |
 
 ---
 
@@ -41,26 +48,15 @@ Unlike traditional SWE roles that focus on algorithms, AI Engineer interviews te
 
 ## How to Use This Track
 
-### Week 1: Learn the Patterns (5-6 hours total)
+Follow **[ROADMAP.md](ROADMAP.md)** for the full sequence (Phase 1 → 2 → 3). In short:
 
-1. **Day 1-2**: Work through `01_core_patterns/`
-   - Read each file top to bottom
-   - Type out each template from memory (don't copy-paste)
-   - Complete the practice problems at the bottom
+- **Phase 1:** Core patterns + FastAPI (run every file, then cold reps).
+- **Phase 2:** Drills 05–10 + core and AIE mocks + postmortems.
+- **Phase 3:** Sprint hub daily — gates, mock prompts, agents lab, devops review.
 
-2. **Day 3-4**: Work through `02_fastapi_fundamentals/`
-   - Run each example locally (`uvicorn filename:app --reload`)
-   - Modify and experiment
-   - Build small variations
+### Cold Rep Method (per pattern)
 
-3. **Day 5+**: Daily drills from `03_drills/`
-   - Time yourself
-   - No looking at references
-   - Track your times
-
-### The "Cold Rep" Method
-
-For each pattern, practice until you can write it **cold** (no references) in under 3 minutes:
+Until you can write each pattern **cold** in under 3 minutes:
 
 ```
 Rep 1: Read and understand (5 min)
@@ -132,6 +128,13 @@ pip install fastapi uvicorn httpx pydantic
 ```
 aie/
 ├── README.md                      # You are here
+├── ROADMAP.md                     # Step-by-step prep path (start here)
+├── 00_sprint_hub/
+│   ├── README.md                  # Sprint map + daily guide
+│   ├── GATES.md                   # AIE readiness gates checklist
+│   ├── mock_prompts/              # AIE mock interview prompts
+│   ├── agents_tools/              # ReAct + tool use lab
+│   └── devops_cloud.md            # DevOps/cloud interview prep
 ├── 01_core_patterns/
 │   ├── README.md                  # Pattern explanations
 │   ├── ingestion_loop.py          # Filter/clean pattern

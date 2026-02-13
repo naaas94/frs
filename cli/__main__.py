@@ -32,11 +32,19 @@ def timer(day, problem, duration, no_audio):
 @cli.command()
 @click.option("--duration", "-t", type=int, default=35, help="Duration in minutes")
 @click.option("--pattern", "-p", type=str, help="Specific pattern to practice")
+@click.option(
+    "--mode",
+    "-m",
+    type=click.Choice(["core", "aie"]),
+    default="core",
+    show_default=True,
+    help="Mock track to run",
+)
 @click.option("--list-problems", "-l", is_flag=True, help="List available problems")
-def mock(duration, pattern, list_problems):
+def mock(duration, pattern, mode, list_problems):
     """Run a full mock interview."""
     from cli.mock import main as mock_main
-    mock_main(duration=duration, pattern=pattern, list_problems=list_problems)
+    mock_main(duration=duration, pattern=pattern, mode=mode, list_problems=list_problems)
 
 
 @cli.command()
